@@ -1,0 +1,148 @@
+# Neha Khetan, 2019  - 2020
+# Modellng spindle dynamics in budding yeast:
+# Of Anaphase : early upto nucleus crossing the bud-neck
+# Aim: Understand the MT-motor dynamics during the process
+#         in terms of motor number dependence and collective forces
+#         for diffusive and directed movement of the spindle
+#  Base code modified: for the yeast set-up and dynein motors
+
+
+nbiter         7200000
+dt               0.001    
+km              100      
+kT               0.0042   	# since imaging T = 30 C ( based on KJ expt )
+visc             0.9 		#0.005 #5   #0.9      #0.0013      ( Literature, estimate: table for viscosity of % glycerol)
+
+boxkm	    500
+
+initcode         41        
+initfile           2        
+
+
+
+# (Shape, dimension)
+# 	  Pre-bud: 3 , 2.5   			         # Stearns: MT params
+#       Budding: 4 , ( 8,4.5 ) 			  # Stearns
+boxshape         4		  				  # 2 periodic; 8 oval  ; 3 circle  ; 4 ellipse   
+boxsize          4		2.25	 	    
+
+statistics       11            120      
+record           7200
+
+
+mtinitlength       0.5
+mtrodlength        0.5      
+mtconfine          1        
+
+mtrigid			   30
+mtdynforce		   1.7
+    
+mtdynamic          1     0   1
+
+
+# =============================================
+
+#Fees, CP, Estrem, C, Moore, JK (2017). High-resolution Imaging and Analysis of Individual Astral Microtubule 	     Dynamics in Budding Yeast. J Vis Exp, 122:np page given.
+# vg = 1.8 um/min     = 0.03 um/s
+# vs = 3.0 um/min     = 0.05 um/s
+# fc = 1.4 events/min = 0.023 1/s
+# fr = 1.8 events/min = 0.03  1/s
+# Flux: -0.005   <Length> = 5.625
+
+mtdynspeed        0       0         0.03      -0.05   
+mtdyntrans        0       0         0.023      0.03
+
+
+
+# ====================================================
+# For unbudded: Carminati, JL, Stearns, T (1997). Microtubules orient the mitotic spindle in yeast through dynein-dependent interactions with the cell cortex. J. Cell Biol., 138, 3:629-41.
+
+# Pre-budding
+# vg = 0.514 um/min     = 0.009 um/s
+# vs = 1.784 um/min     = 0.03 um/s
+# fc = 0.007 events/s   = 0.007 1/s
+# fr = 0 events/s       = 0.  1/s
+# Flux: -0.03 um/s ;  <Length> = 1.22 um
+
+# Budding
+# vg = 0.446 um/min     = 0.007 um/s
+# vs = 0.820 um/min     = 0.014 um/s
+# fc = 0.005 events/s   = 0.005 1/s
+# fr = 0.002 events/s   = 0.002  1/s
+# Flux: -0.008 um/s   <Length> = 1.9 um
+
+#mtdynspeed        0       0         0.009     -0.03   
+#mtdyntrans        0       0         0.007      0
+
+#mtdynspeed        0       0         0.007     -0.014   
+#mtdyntrans        0       0         0.005      0.002
+
+
+# =====================================================
+mtmaxlength		   5 					  # (2: 1997 tim ; 3: moore 2017 or 5.625 if stab len )
+# =======================================================
+
+ghmax                 	  63			    	0	  
+ghGradient	              6            		6          0         0
+MotorAngle				  3					4
+hamodel                   8	            	1    	
+# 1:FV(motor can go backward), 2:constant (vdt), 8:yeast dm
+
+haattachdist              0.07          	0.02      
+haspeed                  -0.102        	-0.102           
+haforce                       4.8           	7           
+
+hadetachmodel             5	    	    	5       
+#6: Kramer   , 5: Nicholas , 0:load independent 
+
+hadetachkramerscale 	  1					    					
+# applicable for hadetachmodel case 6
+#hasteprate		 8  #12.5 , 24
+# applicable for hamodel case 8
+
+haattachrate                5           5
+hadetachrate         0.04       0.04
+haenddetachrate   0.04       0.04
+scalebar		 1
+
+
+
+numax			1
+nuinit			22
+nubundles		2
+nuVect          0	0
+numtperbundle	2
+nuradius		1
+
+numobil         0.01            #0.01 #0.05 # 0.02
+numtmax         0
+nughmax			0
+nuptsmax		0
+nuvisc			1000				#0.05
+nukm			1000 1000 10000      #10 1000 100 #
+# ===============================
+
+
+
+AngleMtSpb      0.5 # 45 degree
+ifbud             1 # 0- prebudding ; 1 - budding 
+
+
+
+# ==========================================
+# mtlengthexpmean    3
+# ---------- Mouse work
+#ghGradInfl   	   5      
+#ghGradSlope		   1
+#ghModelType 	   1	
+
+
+
+# Visuals
+bgcolor	 0x000011FF
+style	3 #5
+nuenvwidth	0.5
+ghsize	9
+mtwidth 4
+hacolor 		  0x00BB00FF
+

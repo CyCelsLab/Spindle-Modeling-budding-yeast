@@ -2,9 +2,11 @@
 In this project the motility dynamics of spindle pole body, nucleus and spindle is modeled during the cell cycle
 
 
-1. Geomtery of cell: file in the path: ./input/CellCoors.out
+1. Geomtery of cell: file in the path: ./input/CellCoors.out  
+   ( and some other example files included )
 
-2. Geometry of spindle: elliposidal and dumbell
+2. Geometry of spindle: elliposidal and dumbell 
+   ( two rep. examples included to illustrate )
 
 3. Models for dynein localization as 
 
@@ -13,6 +15,7 @@ In this project the motility dynamics of spindle pole body, nucleus and spindle 
         b. offloading of dynein on mother and bud cortex: symmetric and/or differential
 				
         c. offloading only at the bud-cortex
+
 
 4. MT asymmetry model
       a. Differential MT dynamics of MTs emanating from the mother and daughter SPBs

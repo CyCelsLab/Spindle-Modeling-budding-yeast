@@ -1,0 +1,248 @@
+% Neha Khetan, Athale Lab
+% 2020 - 2021 : Budding cell
+% Geomtery of cell: file in the path: ./input/CellCoors.out
+% Geometry of spindle: elliposidal and dumbell
+% Models for dynein localization:
+%				1. uniform arc: "yeast_bud_mdX.cym"
+%				2. offloading: Offloading_1 => same mt on both spbs
+%				3. offloading:           _2 => off-loading only at the bud-cortex
+%               4. => Create MT asymmetry: microtubule1 and microtubule2 : in this file.
+% CYTOSIM PI version ed5c1f1                              
+% =============================================================
+
+set simul INVIVO
+{
+	time_step = 0.001
+	steric = 1, 100
+	viscosity = 0.5
+	tolerance = 0.01
+	kT = 0.0042
+}
+
+
+set space cell
+{
+    shape = polygon
+    display = ( visible=1; style = 3)
+}
+
+new cell
+{
+    file = ./input/cellCoors.out   
+    
+}
+
+
+set fiber microtubule1
+{
+    rigidity       = 20
+    segmentation   = 0.5
+    confine        = 1 ,  500 , cell
+    min_length     = 0.5  
+    activity       = classic
+    
+    % first column if for PLUS end; second one for MINUS end
+    growing_speed            = 0.03  %,   0 
+    shrinking_speed          = -0.05   %,  0
+    catastrophe_rate         = 0.023 , 1   %,  0
+    %catastrophe_rate_stalled = 0.04 %,   0
+    rescue_rate              = 0.03 %,      0
+    growing_force            = 1.67%,   1.67
+    steric = 1, 0.05
+    %display = ( plus_end=6, 2;  )
+    persistent  = 1 
+}
+
+
+
+set fiber microtubule2
+{
+    rigidity       = 20
+    segmentation   = 0.5
+    confine        = 1 ,  500 , cell
+    min_length     = 0.5  
+    activity       = classic
+    
+    % first column if for PLUS end; second one for MINUS end
+    growing_speed            = 0.03  %,   0 
+    shrinking_speed          = -0.05   %,  0
+    catastrophe_rate         = 0.023 , 1   %,  0
+    %catastrophe_rate_stalled = 0.04 %,   0
+    rescue_rate              = 0.03 %,      0
+    growing_force            = 1.67%,   1.67
+    steric = 1, 0.05
+    %display = ( plus_end=6, 2;  )
+    persistent  = 1 
+}
+
+
+
+set hand nucleator1
+{
+	unbinding_rate   = 0
+	unbinding_force  = Inf
+	activity         = nucleate
+	nucleate         = 10, microtubule1, ( fiber_length= 0.5 ;  plus_end = grow;  )
+	display          = ( size=4; color= grey; )
+}
+
+
+
+set hand nucleator2
+{
+	unbinding_rate  = 0
+	unbinding_force = Inf
+	activity        = nucleate
+	nucleate        = 10, microtubule2, ( fiber_length= 1.0 ;  plus_end = grow ;)
+	display         = ( size=4; color= orange; )
+}
+
+
+set single spindleNucleator1
+{
+	hand = nucleator1
+	stiffness = 1000
+    
+}
+
+set single spindleNucleator2
+{
+	hand = nucleator2
+	stiffness = 1000
+}
+
+
+set solid spindle
+{
+	confine = 4 , 10000, cell
+	steric = 1
+   	 
+}
+
+
+
+
+
+new 1 solid spindle
+{
+
+    nb_points = 7
+    
+    point1 =     0      0 0    ,  0.25
+    point2 =     0.40    0 0    , 0.50
+    point3 =    -0.40    0 0    , 0.50
+
+    point4 =    0.90  0   0    , 0, spindleNucleator2
+    point5 =   -0.90  0   0    , 0, spindleNucleator1
+    point6 =    0.90  0.01 0    , 0, spindleNucleator2
+    point7 =   -0.90  0.01 0    , 0, spindleNucleator1
+
+    position    = 0 0 0 at 0.1 0
+    orientation = 1 0 0 %Places the solid in absolute space
+
+
+}
+
+
+
+%% ==========================================
+set hand binder
+{
+    binding 	= 0, 0
+    unbinding 	= 0, Inf
+    display  = ( size =0.18 ; color = white;)
+}
+
+set single grafted
+{
+    hand 		= binder
+    stiffness 	= 200
+    activity 	= fixed
+
+   
+}
+
+new 5000 grafted
+{
+    position = surface % gradient 3 5
+
+    
+}
+%% =========================================
+
+
+
+set hand dynein
+{
+    binding_rate     = 5
+    binding_range    = 0.075
+    unbinding_rate   = 0.04
+    unbinding_force  = 3
+        
+    activity 		 = move
+    unloaded_speed   =   -0.08
+    stall_force 	 = 4.8
+    display  = ( size = 25 ; color = red ;)
+}
+
+
+set single graftedDyn
+{
+    hand = dynein
+    stiffness = 200
+    activity = fixed
+}
+
+% Dynein 
+new 1 graftedDyn	 (3.25	-1.7) 
+new 1 graftedDyn	 (3.40	-1.69) 
+new 1 graftedDyn	 (3.51	-1.68) 
+new 1 graftedDyn	 (3.64	-1.66) 
+new 1 graftedDyn	 (3.77	-1.62) 
+new 1 graftedDyn	 (3.89	-1.58) 
+new 1 graftedDyn	 (4.01	-1.53) 
+new 1 graftedDyn	 (4.12	-1.47) 
+new 1 graftedDyn	 (4.24	-1.4) 
+new 1 graftedDyn	 (4.30	-1.33) 
+new 1 graftedDyn	 (4.44	-1.25) 
+new 1 graftedDyn	 (4.53	-1.16) 
+new 1 graftedDyn	 (4.62	-1.06) 
+new 1 graftedDyn	 (4.68	-0.96) 
+new 1 graftedDyn	 (4.75	-0.85) 
+new 1 graftedDyn	 (4.80	-0.74) 
+new 1 graftedDyn	 (4.88	-0.62) 
+new 1 graftedDyn	 (4.92	-0.5) 
+new 1 graftedDyn	 (4.94	-0.38) 
+new 1 graftedDyn	 (4.98	-0.25) 
+new 1 graftedDyn	 (5.0	-0.10) 
+new 1 graftedDyn	 (5.0	0.0) 
+new 1 graftedDyn	 (5.0	0.10) 
+new 1 graftedDyn	 (4.98	0.25) 
+new 1 graftedDyn	 (4.94	0.38) 
+new 1 graftedDyn	 (4.92	0.5) 
+new 1 graftedDyn	 (4.88	0.61) 
+new 1 graftedDyn	 (4.83	0.74) 
+new 1 graftedDyn	 (4.75	0.85) 
+new 1 graftedDyn	 (4.7	0.96) 
+new 1 graftedDyn	 (4.60	1.06) 
+new 1 graftedDyn	 (4.53	1.16) 
+new 1 graftedDyn	 (4.40	1.25) 
+new 1 graftedDyn	 (4.30	1.33) 
+new 1 graftedDyn	 (4.24	1.4) 
+new 1 graftedDyn	 (4.12	1.47) 
+new 1 graftedDyn	 (4.01	1.53) 
+new 1 graftedDyn	 (3.89	1.58) 
+new 1 graftedDyn	 (3.77	1.62) 
+new 1 graftedDyn	 (3.62	1.66) 
+new 1 graftedDyn	 (3.51	1.68) 
+new 1 graftedDyn	 (3.41	1.69) 
+new 1 graftedDyn	 (3.25	1.7) 	 
+
+%% ==========================================
+run simul *
+{
+	nb_steps = 1200000
+	nb_frames = 1200
+}
+
+
